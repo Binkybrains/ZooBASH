@@ -1,0 +1,79 @@
+#!/bin/bash
+
+#Nelly Duke
+#zoo.bash
+#a Bash script that visits every subdirectory in a folder (provided via command line)
+
+animal=""
+startdir=$(pwd)
+metricFile=".KS_Dir"
+count=0
+
+function check_file_for_animal () {
+        local filename="$1" f
+        while read l ; do
+                previous=""
+                for w in $l; do
+                        if [[ $previous ==  $animal ]] ;
+                                then
+                                echo $(($w))
+
+                                return 0
+                        else
+                                previous=$w
+                        fi
+                done
+        done < $filename
+        echo "0"
+        return 1
+}
+
+
+function count_animals () {
+        local dir="$1" f
+        for f in "$dir"/{.[!.]*,*} ; do
+                if [[ -d "$f" ]] ;
+                then
+                        count_animals "$f"
+                else
+                        if [[ -f "$f" ]] ; then
+                                if [[ $(basename -- $f) == "$metricFile" ]] ; t>
+                                        local fileCount=$(check_file_for_animal>
+                                        count=$(($count + $fileCount))
+                                fi
+                        fi
+                fi
+        done
+}
+if [ $# -ne 0 ] ;
+        then
+        if [ $# -eq 1 ] ;
+                then
+                animal=$1
+        else
+                found=0
+                if [[ "$1" = "-f" ]] ; then
+                        metricFile=$2
+                        found=1
+                fi
+                if [ $found -eq 1 ] ;
+                        then
+                        if [ $# -eq  4 ] ;
+                                then
+                                       startdir=$3
+                                        animal=$4
+                        else
+                                animal=$3
+                        fi
+                else
+                        startdir=$1
+                        animal=$2
+                fi
+        fi
+        count_animals "$startdir"
+        echo "$animal $count"
+else
+        echo $1
+fi
+
+
